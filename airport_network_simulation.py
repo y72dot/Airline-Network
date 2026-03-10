@@ -210,7 +210,15 @@ def add_node_with_attributes(G, node_id):
     pop = (np.random.pareto(3.0) + 1) * 50
     pop = min(pop, 2500)
     
-    G.add_node(node_id, pos=(x, y), GDP=gdp, POP=pop)
+    # -------------------------------------------------------------------------
+    # 假设每个节点总权重 (Total Capacity) 与质量因子 M 成正比
+    # M = sqrt(GDP * POP)
+    # Total Weight = k * M (这里取 k=1.0，即总权重数值上等于 M)
+    # -------------------------------------------------------------------------
+    M = math.sqrt(gdp * pop)
+    total_weight = int(M) # 取整作为总航班量配额
+    
+    G.add_node(node_id, pos=(x, y), GDP=gdp, POP=pop, M=M, TotalWeight=total_weight)
 
 # -----------------------------------------------------------------------------
 # 3. 主模型逻辑
