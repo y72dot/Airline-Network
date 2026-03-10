@@ -210,7 +210,15 @@ def add_node_with_attributes(G, node_id):
     pop = (np.random.pareto(3.0) + 1) * 50
     pop = min(pop, 2500)
     
-    G.add_node(node_id, pos=(x, y), GDP=gdp, POP=pop)
+    # -------------------------------------------------------------------------
+    # 假设每个节点总权重 (Total Capacity) 与质量因子 M 成正比
+    # M = sqrt(GDP * POP)
+    # Total Weight = k * M (这里取 k=1.0，即总权重数值上等于 M)
+    # -------------------------------------------------------------------------
+    M = math.sqrt(gdp * pop)
+    total_weight = int(M) # 取整作为总航班量配额
+    
+    G.add_node(node_id, pos=(x, y), GDP=gdp, POP=pop, M=M, TotalWeight=total_weight)
 
 # -----------------------------------------------------------------------------
 # 3. 主模型逻辑
@@ -253,15 +261,27 @@ def run_simulation():
     current_total_energy = calculate_total_energy(G)
     energy_history.append(current_total_energy)
     
+    # -------------------------------------------------------------------------
     # 2. 逐时间步加入新机场
+    # -------------------------------------------------------------------------
     for t in range(INITIAL_NODES, TOTAL_NODES):
         new_node = t
         add_node_with_attributes(G, new_node)
         
         # 2.1 偏好连接生成初始边
+        # -------------------------------------------------------------------------
+        # 新节点的初始权重分配
+        # 假设新节点可分配的总权重为 TotalWeight
+        # 将其均匀分配给 NEW_NODE_EDGES 条初始边
+        # -------------------------------------------------------------------------
+        
+        current_capacity = G.nodes[new_node]['TotalWeight']
+        # 为了保证初始总权重完全被分配，进行简单的整数分配
+        avg_weight = max(1, current_capacity // NEW_NODE_EDGES)
+        
         targets = get_preferential_targets(G, NEW_NODE_EDGES)
         for target in targets:
-            G.add_edge(new_node, target, weight=INITIAL_WEIGHT)
+            G.add_edge(new_node, target, weight=avg_weight)
             # 更新总能量 (增量更新: 只需加上新边的能量)
             current_total_energy += calculate_edge_energy(G, new_node, target)
             
