@@ -84,3 +84,13 @@ def build_routes(
                 a_j.incoming_routes.append(route)
 
     return routes
+
+def blt_route(airports):
+    routes = []
+    for i in airports:
+        for j in airports:
+            if i == j:
+                continue
+            rout = Route(i, j, haversine_distance(i.lat, i.lon, j.lat, j.lon), i.M * j.M)
+            routes.append(rout)
+    return routes

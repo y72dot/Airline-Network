@@ -8,10 +8,12 @@ class Airport:
         self,
         name: str,
         city: str,
-        lat: float,
-        lon: float,
-        gdp: float,        # 亿元
-        population: float, # 万人
+        lat: float,             # 经度
+        lon: float,             # 纬度
+        gdp: float,             # 亿元
+        population: float,      # 万人
+        policy: float = 1,      # 政策因素（0~1）
+        w: int = 3,             # 航线数
         id_: Optional[int] = None
     ):
         self.name = name

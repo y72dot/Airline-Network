@@ -63,7 +63,7 @@ def visualize_airline_network(
             linestyle_opts=opts.LineStyleOpts(
                 width=line_width,
                 opacity=line_opacity,
-                curve=0.2,
+                curve=0,
                 color="rgba(0, 100, 200, 0.8)"
             ),
             label_opts=opts.LabelOpts(is_show=False)

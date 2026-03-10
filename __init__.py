@@ -1,5 +1,5 @@
 from .airport import Airport
-from .route import Route, build_routes
+from .route import Route, build_routes, blt_route
 from .visualizer import visualize_airline_network
 from .utils import haversine_distance, compute_M
 
